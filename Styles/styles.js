@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     top: 0,
-    zIndex: -1,
+    zIndex: 0,
   },
   wave: {
     backgroundColor: '#98c5de',
@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins_700Bold',
     color: '#607d8b',
     marginBottom: 40,
   },
@@ -69,13 +69,14 @@ export const styles = StyleSheet.create({
   labelText: {
     color: '#757575',
     fontSize: 12,
-    fontWeight: '600',
+    fontFamily: 'Poppins_600SemiBold',
   },
   input: {
     flex: 1,
     height: '100%',
     fontSize: 16,
     color: '#333',
+    fontFamily: 'Poppins_400Regular',
   },
   iconContainer: {
     marginLeft: 10,
@@ -103,7 +104,7 @@ export const styles = StyleSheet.create({
   primaryButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins_700Bold',
   },
   linkContainer: {
     alignItems: 'center',
@@ -113,13 +114,15 @@ export const styles = StyleSheet.create({
     color: '#5d9cbf',
     marginBottom: 5,
     fontSize: 12,
+    fontFamily: 'Poppins_400Regular',
   },
   linkText: {
     color: '#5d9cbf',
     fontSize: 16,
+    fontFamily: 'Poppins_400Regular',
   },
   linkBold: {
-    fontWeight: 'bold',
+    fontFamily: 'Poppins_700Bold',
   },
   secondaryButton: {
     backgroundColor: '#6caecf',
@@ -137,7 +140,7 @@ export const styles = StyleSheet.create({
   secondaryButtonText: {
     color: '#fff',
     fontSize: 15,
-    fontWeight: '600',
+    fontFamily: 'Poppins_600SemiBold',
   },
 
   // --- ESTILOS ESPECÍFICOS DE LOGIN ---
@@ -184,7 +187,7 @@ export const styles = StyleSheet.create({
   },
   loginTitle: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins_700Bold',
     color: '#607d8b',
     textAlign: 'center',
     marginBottom: 30,
@@ -198,7 +201,7 @@ export const styles = StyleSheet.create({
   },
   backButtonText: {
     color: '#5d9cbf',
-    fontWeight: 'bold',
+    fontFamily: 'Poppins_700Bold',
     fontSize: 16,
   },
 });

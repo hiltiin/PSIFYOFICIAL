@@ -31,10 +31,10 @@ export default function LoginScreen({ onNavigate }) {
 						<View style={styles.linkContainer}>
 							<Text style={styles.orText}>ou</Text>
 							<TouchableOpacity onPress={() => onNavigate('cadastro')}>
-								<Text style={[styles.linkText, {fontWeight: 'bold'}]}>
-									Cadastre-se
-								</Text>
-							</TouchableOpacity>
+											<Text style={[styles.linkText, styles.linkBold]}>
+												Cadastre-se
+											</Text>
+										</TouchableOpacity>
 						</View>
 					</View>
 				</View>

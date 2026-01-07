@@ -1,17 +1,18 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StatusBar, ImageBackground } from 'react-native';
 import { styles } from '../Styles/styles'; // Importa estilos
 import CustomInput from '../components/Input'; // Importa input
+const bgImage = require('../assets/imagem de fundo.png');
 
 export default function CadastroScreen({ onNavigate }) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       
-      {/* Fundo Onda */}
-      <View style={styles.headerBackground}>
-        <View style={styles.wave} />
-      </View>
+      {/* Fundo Onda (imagem) */}
+      <ImageBackground source={bgImage} style={styles.headerBackground} resizeMode="cover">
+        {/* imagem usada como fundo com efeito de onda */}
+      </ImageBackground>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>Cadastro</Text>

@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     margin: 24,
     marginTop: 0,
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins_700Bold',
     textAlign: 'center',
   },
   logo: {
