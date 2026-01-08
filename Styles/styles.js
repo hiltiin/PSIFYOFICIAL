@@ -8,6 +8,75 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+
+  // --- WELCOME ---
+  welcomeContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  welcomeHeaderBackground: {
+    height: 500,
+    width: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  welcomeContent: {
+    flex: 1,
+    paddingHorizontal: 30,
+    paddingTop: 320,
+  },
+  welcomeTitle: {
+    fontSize: 85,
+    textAlign: 'left',
+    color: '#5d9cbf',
+    fontFamily: 'Poppins_700Bold',
+  },
+  welcomeSubtitle: {
+    fontSize: 30,
+     textAlign: 'left',
+    color: '#5d9cbf',
+    fontFamily: 'Poppins_600SemiBold',
+    marginTop: -40,
+    marginBottom: 40,
+  },
+  welcomeSubtitleBold: {
+    fontFamily: 'Poppins_700Bold',
+  },
+  welcomeButton: {
+    alignSelf: 'center',
+    backgroundColor: '#5d9cbf',
+    paddingHorizontal: 50,
+    height: 70,
+    borderRadius: 22,
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.18,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  welcomeButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: 'Poppins_700Bold',
+  },
+  welcomeIndicators: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingBottom: 26,
+    gap: 10,
+  },
+  welcomeIndicator: {
+    width: 46,
+    height: 4,
+    borderRadius: 999,
+    backgroundColor: '#bcdff0',
+  },
+  welcomeIndicatorActive: {
+    backgroundColor: '#5d9cbf',
+  },
   
   // --- HEADER / ONDAS ---
   headerBackground: {
@@ -23,7 +92,7 @@ export const styles = StyleSheet.create({
     width: width * 1.5,
     borderRadius: 800,
     position: 'absolute',
-    top: -160,
+    top: -500,
     left: -(width * 0.25),
     transform: [{ scaleX: 1.2 }],
   },
@@ -38,7 +107,7 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontFamily: 'Poppins_700Bold',
-    color: '#607d8b',
+    color: '#5d9cbf',
     marginBottom: 40,
   },
 
@@ -188,7 +257,7 @@ export const styles = StyleSheet.create({
   loginTitle: {
     fontSize: 28,
     fontFamily: 'Poppins_700Bold',
-    color: '#607d8b',
+    color: '#5d9cbf',
     textAlign: 'center',
     marginBottom: 30,
   },
@@ -203,5 +272,24 @@ export const styles = StyleSheet.create({
     color: '#5d9cbf',
     fontFamily: 'Poppins_700Bold',
     fontSize: 16,
+  },
+  backTopLeft: {
+    position: 'absolute',
+    top: 48,
+    left: 12,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#eef6fa',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#d7eef6',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 6,
+    zIndex: 10,
   },
 });

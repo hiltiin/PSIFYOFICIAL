@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import CadastroScreen from './screens/cadastro';
 import LoginScreen from './screens/login';
-// carregar Poppins
+import WelcomeScreen from './screens/welcome';
 import { useFonts, Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
 
-// App apenas gerencia qual tela exibir (cadastro ou login) e carrega as fontes
 export default function App() {
-  const [telaAtual, setTelaAtual] = useState('cadastro'); // 'cadastro' ou 'login'
+  const [stack, setStack] = useState(['welcome']);
+  const current = stack[stack.length - 1];
 
   const [fontsLoaded] = useFonts({ Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold });
 
@@ -19,6 +19,22 @@ export default function App() {
     );
   }
 
-  if (telaAtual === 'login') return <LoginScreen onNavigate={setTelaAtual} />;
-  return <CadastroScreen onNavigate={setTelaAtual} />;
+  function navigate(to) {
+    if (to && typeof to === 'object') {
+      if (to.type === 'reset' && typeof to.to === 'string') {
+        setStack([to.to]);
+      }
+      return;
+    }
+
+    if (to === 'back') {
+      if (stack.length > 1) setStack(prev => prev.slice(0, -1));
+      return;
+    }
+    setStack(prev => [...prev, to]);
+  }
+
+  if (current === 'welcome') return <WelcomeScreen onNavigate={navigate} />;
+  if (current === 'login') return <LoginScreen onNavigate={navigate} />;
+  return <CadastroScreen onNavigate={navigate} />;
 }
