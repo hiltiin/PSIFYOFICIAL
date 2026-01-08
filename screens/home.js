@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { styles } from '../Styles/styles';
 
-export default function HomeScreen() {
+export default function HomeScreen({ onNavigate }) {
   return (
     <View style={styles.container}>
       {/* Barra de busca */}
@@ -53,10 +53,13 @@ export default function HomeScreen() {
       </ScrollView>
 
       {/* Barra de navegação inferior */}
+      <View style={styles.bottomFill} />
       <View style={styles.bottomBar}>
         <Image source={require('../assets/home.png')} style={styles.bottomIcon} />
         <Image source={require('../assets/agenda.png')} style={styles.bottomIcon} />
-        <Image source={require('../assets/diario.png')} style={styles.bottomIcon} />
+        <TouchableOpacity onPress={() => onNavigate && onNavigate('diario')}>
+          <Image source={require('../assets/diario.png')} style={styles.bottomIcon} />
+        </TouchableOpacity>
         <Image source={require('../assets/chat.png')} style={styles.bottomIcon} />
         <Image source={require('../assets/favoritos.png')} style={styles.bottomIcon} />
       </View>
