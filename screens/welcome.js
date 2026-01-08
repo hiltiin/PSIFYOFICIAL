@@ -22,7 +22,7 @@ export default function WelcomeScreen({ onNavigate }) {
           <Text style={styles.welcomeSubtitleBold}> psify!</Text>
         </Text>
 
-        <TouchableOpacity style={styles.welcomeButton} onPress={() => onNavigate('login')}>
+        <TouchableOpacity style={styles.welcomeButton} onPress={() => onNavigate('onboarding2')}>
           <Text style={styles.welcomeButtonText}>Vamos começar!</Text>
         </TouchableOpacity>
       </View>

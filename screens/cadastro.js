@@ -2,12 +2,21 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StatusBar, ImageBackground } from 'react-native';
 import { styles } from '../Styles/styles'; // Importa estilos
 import CustomInput from '../components/Input'; // Importa input
+import { Ionicons } from '@expo/vector-icons';
 const bgImage = require('../assets/imagem de fundo.png');
 
 export default function CadastroScreen({ onNavigate }) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+
+      {/* Back arrow to login */}
+      <TouchableOpacity
+        style={styles.backTopLeft}
+        onPress={() => onNavigate({ type: 'reset', to: 'welcome' })}
+      >
+        <Ionicons name="chevron-back" size={30} color="#5d9cbf" />
+      </TouchableOpacity>
       
       {/* Fundo Onda (imagem) */}
       <ImageBackground source={bgImage} style={styles.headerBackground} resizeMode="cover">

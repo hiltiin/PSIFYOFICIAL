@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform, StatusBar } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
   },
   welcomeSubtitle: {
     fontSize: 30,
-     textAlign: 'left',
+    textAlign: 'left',
     color: '#5d9cbf',
     fontFamily: 'Poppins_600SemiBold',
     marginTop: -40,
@@ -65,6 +65,9 @@ export const styles = StyleSheet.create({
   welcomeIndicators: {
     flexDirection: 'row',
     justifyContent: 'center',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
     paddingBottom: 26,
     gap: 10,
   },
@@ -76,6 +79,155 @@ export const styles = StyleSheet.create({
   },
   welcomeIndicatorActive: {
     backgroundColor: '#5d9cbf',
+  },
+
+  // --- ONBOARDING 2 ---
+  onboardingContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  onboardingHeaderBackground: {
+    height: 300,
+    width: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  onboardingContent: {
+    flex: 1,
+    paddingHorizontal: 30,
+    paddingTop: 90,
+    alignItems: 'center',
+  },
+  onboardingHero: {
+    width: '100%',
+    height: 260,
+    marginTop : 100,
+    marginBottom: 18,
+  },
+  onboardingTitle: {
+    fontSize: 44,
+    lineHeight: 55,
+    textAlign: 'center',
+    color: '#5d9cbf',
+    fontFamily: 'Poppins_700Bold',
+    marginTop: -40,
+    marginBottom: 20,
+  },
+  onboardingSubtitle: {
+    fontSize: 18,
+    lineHeight: 22,
+    textAlign: 'center',
+    color: '#5d9cbf',
+    fontFamily: 'Poppins_600SemiBold',
+    marginBottom: 30,
+  },
+  onboardingButton: {
+    backgroundColor: '#5d9cbf',
+    paddingHorizontal: 26,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.18,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  onboardingButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    textAlign: 'center',
+    fontFamily: 'Poppins_700Bold',
+  },
+
+  // --- ONBOARDING 3 ---
+  onboarding3Container: {
+    flex: 1,
+    backgroundColor: '#98c5de',
+  },
+  onboarding3Card: {
+    flex: 1,
+    marginTop: 130,
+    marginHorizontal: 0,
+    marginBottom: 0,
+    borderRadius: 30,
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+  },
+  onboarding3IllustrationCard: {
+    height: 270,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    paddingTop: 18,
+  },
+  onboarding3Hero: {
+    width: '100%',
+    height: 210,
+  },
+  onboarding3Content: {
+    flex: 1,
+    paddingHorizontal: 28,
+    paddingTop: 10,
+    alignItems: 'center',
+  },
+  onboarding3Title: {
+    fontSize: 35,
+    lineHeight: 40,
+    textAlign: 'center',
+    color: '#5d9cbf',
+    fontFamily: 'Poppins_700Bold',
+    marginTop : 20,
+    marginBottom: 25,
+  },
+  onboarding3Subtitle: {
+    fontSize: 17,
+    lineHeight: 18,
+    textAlign: 'center',
+    color: '#5d9cbf',
+    fontFamily: 'Poppins_600SemiBold',
+    marginBottom: 30,
+    marginTop: -15,
+  },
+  onboarding3PrimaryButton: {
+    backgroundColor: '#5d9cbf',
+    marginTop: 10,
+    paddingHorizontal: 42,
+    height: 50,
+    borderRadius: 45,
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.18,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  onboarding3PrimaryButtonText: {
+    color: '#fff',
+    fontSize: 15,
+    textAlign: 'center',
+    fontFamily: 'Poppins_700Bold',
+  },
+  onboarding3OrText: {
+    marginTop: 10,
+    marginBottom: 6,
+    color: '#5d9cbf',
+    fontSize: 12,
+    fontFamily: 'Poppins_400Regular',
+  },
+  onboarding3LoginLink: {
+    color: '#5d9cbf',
+    fontSize: 12,
+    fontFamily: 'Poppins_700Bold',
+  },
+  onboarding3IndicatorsWrap: {
+    marginTop: 'auto',
+    paddingBottom: 18,
+    width: '100%',
+  },
+  onboarding3Indicator: {
+    width: 46,
   },
   
   // --- HEADER / ONDAS ---
@@ -275,7 +427,7 @@ export const styles = StyleSheet.create({
   },
   backTopLeft: {
     position: 'absolute',
-    top: 48,
+    top: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) + 16 : 56,
     left: 12,
     width: 56,
     height: 56,
@@ -291,5 +443,8 @@ export const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 6,
     zIndex: 10,
+  },
+  onboardingBackTopLeft: {
+    top: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) + 28 : 68,
   },
 });
