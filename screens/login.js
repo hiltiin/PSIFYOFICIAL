@@ -26,7 +26,7 @@ export default function LoginScreen({ onNavigate }) {
 					</View>
 
 					<View style={{ alignItems: 'center', marginTop: 10 }}>
-						<TouchableOpacity style={styles.primaryButton}>
+						<TouchableOpacity style={styles.primaryButton} onPress={() => onNavigate('home')}>
 							<Text style={styles.primaryButtonText}>Login</Text>
 						</TouchableOpacity>
 
