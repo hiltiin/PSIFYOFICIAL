@@ -10,6 +10,7 @@ import Onboarding2Screen from './screens/onboarding2';
 import Onboarding3Screen from './screens/onboarding3';
 import HomeScreen from './screens/home';
 import DiarioScreen from './screens/diario';
+import DiarioNotaScreen from './screens/diarioNota';
 import { useFonts, Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import AgendaScreen from './screens/agenda';
 import PerfilScreen from './screens/perfil';
@@ -25,9 +26,14 @@ const defaultScreenOptions = {
 };
 
 function withOnNavigate(Component) {
-  return function Wrapped({ navigation }) {
+  return function Wrapped(props) {
+    const { navigation } = props;
     function onNavigate(to) {
       if (to && typeof to === 'object') {
+        if (typeof to.to === 'string') {
+          navigation.navigate(to.to, to.params);
+          return;
+        }
         if (to.type === 'reset' && typeof to.to === 'string') {
           navigation.reset({ index: 0, routes: [{ name: to.to }] });
         }
@@ -44,7 +50,7 @@ function withOnNavigate(Component) {
       }
     }
 
-    return <Component onNavigate={onNavigate} />;
+    return <Component {...props} onNavigate={onNavigate} />;
   };
 }
 
@@ -55,6 +61,7 @@ const Login = withOnNavigate(LoginScreen);
 const Cadastro = withOnNavigate(CadastroScreen);
 const Home = withOnNavigate(HomeScreen);
 const Diario = withOnNavigate(DiarioScreen);
+const DiarioNota = withOnNavigate(DiarioNotaScreen);
 const Agenda = withOnNavigate(AgendaScreen);
 const Perfil = withOnNavigate(PerfilScreen);
 const Profissionais = withOnNavigate(ProfissionaisScreen);
@@ -82,6 +89,7 @@ export default function App() {
         <Stack.Screen name="cadastro" component={Cadastro} />
         <Stack.Screen name="home" component={Home} />
         <Stack.Screen name="diario" component={Diario} />
+        <Stack.Screen name="diarioNota" component={DiarioNota} />
         <Stack.Screen name="agenda" component={Agenda} />
         <Stack.Screen name="profissionais" component={Profissionais} />
         <Stack.Screen name="horario" component={Horario} />
