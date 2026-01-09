@@ -2,7 +2,7 @@ import React from 'react';
 import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { styles as appStyles } from '../Styles/styles';
 
-export default function Diario({ onNavigate }) {
+export default function Diario({ onNavigate, current = 'diario' }) {
   const entries = [
     { id: '1', date: 'Terça-Feira, 08 de janeiro' },
     { id: '2', date: 'Segunda-Feira, 07 de janeiro' },
@@ -64,12 +64,18 @@ export default function Diario({ onNavigate }) {
         <TouchableOpacity onPress={() => onNavigate && onNavigate('home')}>
           <Image source={require('../assets/home.png')} style={appStyles.bottomIcon} />
         </TouchableOpacity>
-        <Image source={require('../assets/agenda.png')} style={appStyles.bottomIcon} />
+        <TouchableOpacity onPress={() => onNavigate && onNavigate('agenda')}>
+          <Image source={require('../assets/agenda.png')} style={appStyles.bottomIcon} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => onNavigate && onNavigate('diario')}>
           <Image source={require('../assets/diario.png')} style={appStyles.bottomIcon} />
         </TouchableOpacity>
-        <Image source={require('../assets/chat.png')} style={appStyles.bottomIcon} />
-        <Image source={require('../assets/favoritos.png')} style={appStyles.bottomIcon} />
+        <TouchableOpacity onPress={() => onNavigate && onNavigate('chat')}>
+          <Image source={require('../assets/chat.png')} style={appStyles.bottomIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onNavigate && onNavigate('favoritos')}>
+          <Image source={require('../assets/favoritos.png')} style={appStyles.bottomIcon} />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

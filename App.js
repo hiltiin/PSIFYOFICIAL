@@ -11,6 +11,8 @@ import Onboarding3Screen from './screens/onboarding3';
 import HomeScreen from './screens/home';
 import DiarioScreen from './screens/diario';
 import { useFonts, Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
+import AgendaScreen from './screens/agenda';
+import PerfilScreen from './screens/perfil';
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +52,8 @@ const Login = withOnNavigate(LoginScreen);
 const Cadastro = withOnNavigate(CadastroScreen);
 const Home = withOnNavigate(HomeScreen);
 const Diario = withOnNavigate(DiarioScreen);
+const Agenda = withOnNavigate(AgendaScreen);
+const Perfil = withOnNavigate(PerfilScreen);
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold });
@@ -72,6 +76,8 @@ export default function App() {
         <Stack.Screen name="cadastro" component={Cadastro} />
         <Stack.Screen name="home" component={Home} />
         <Stack.Screen name="diario" component={Diario} />
+        <Stack.Screen name="agenda" component={Agenda} />
+        <Stack.Screen name="perfil" component={Perfil} />
       </Stack.Navigator>
     </NavigationContainer>
   );
