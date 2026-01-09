@@ -1,11 +1,44 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StatusBar, ImageBackground } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StatusBar, ImageBackground, Alert } from 'react-native';
 import { styles } from '../Styles/styles'; // Importa estilos
 import CustomInput from '../components/Input'; // Importa input
 import { Ionicons } from '@expo/vector-icons';
 const bgImage = require('../assets/imagem de fundo.png');
+import { auth, db } from '../firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { ref, set } from 'firebase/database';
 
 export default function CadastroScreen({ onNavigate }) {
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleRegister = async () => {
+    if (!email || !password || !name || !lastName) {
+      Alert.alert('Erro', 'Preencha nome, sobrenome, email e senha');
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert('Erro', 'Senhas não coincidem');
+      return;
+    }
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      try {
+        await set(ref(db, `users/${user.uid}`), { email, firstName: name, lastName, createdAt: Date.now() });
+      } catch (dbErr) {
+        console.warn('Erro ao salvar no Realtime DB:', dbErr);
+      }
+      Alert.alert('Sucesso', 'Usuário registrado');
+      onNavigate('login');
+    } catch (error) {
+      Alert.alert('Erro', error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
@@ -23,16 +56,18 @@ export default function CadastroScreen({ onNavigate }) {
         {/* imagem usada como fundo com efeito de onda */}
       </ImageBackground>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <View style={styles.scrollContent}>
         <Text style={styles.title}>Cadastro</Text>
 
         <View style={styles.formArea}>
-          <CustomInput label="Email" placeholder="" />
-          <CustomInput label="Senha" secureTextEntry={true} showIcon={true} />
-          <CustomInput label="Confirmar Senha" secureTextEntry={true} showIcon={true} />
+          <CustomInput label="Nome" placeholder="Nome" value={name} onChangeText={setName} autoCapitalize="words" />
+          <CustomInput label="Sobrenome" placeholder="Sobrenome" value={lastName} onChangeText={setLastName} autoCapitalize="words" />
+          <CustomInput label="Email" placeholder="" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
+          <CustomInput label="Senha" secureTextEntry={true} showIcon={true} value={password} onChangeText={setPassword} />
+          <CustomInput label="Confirmar Senha" secureTextEntry={true} showIcon={true} value={confirmPassword} onChangeText={setConfirmPassword} />
         </View>
 
-        <TouchableOpacity style={styles.primaryButton}>
+        <TouchableOpacity style={[styles.primaryButton, styles.fullPrimaryButton]} onPress={handleRegister}>
           <Text style={styles.primaryButtonText}>Cadastrar</Text>
         </TouchableOpacity>
 
@@ -48,7 +83,7 @@ export default function CadastroScreen({ onNavigate }) {
         <TouchableOpacity style={styles.secondaryButton}>
           <Text style={styles.secondaryButtonText}>Sou psicólogo(a)!</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </View>
   );
 }

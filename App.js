@@ -13,6 +13,9 @@ import DiarioScreen from './screens/diario';
 import { useFonts, Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import AgendaScreen from './screens/agenda';
 import PerfilScreen from './screens/perfil';
+import ProfissionaisScreen from './screens/profissionais';
+import HorarioScreen from './screens/horario';
+import SolicitacaoScreen from './screens/solicitacao';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +57,9 @@ const Home = withOnNavigate(HomeScreen);
 const Diario = withOnNavigate(DiarioScreen);
 const Agenda = withOnNavigate(AgendaScreen);
 const Perfil = withOnNavigate(PerfilScreen);
+const Profissionais = withOnNavigate(ProfissionaisScreen);
+const Horario = withOnNavigate(HorarioScreen);
+const Solicitacao = withOnNavigate(SolicitacaoScreen);
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold });
@@ -77,6 +83,9 @@ export default function App() {
         <Stack.Screen name="home" component={Home} />
         <Stack.Screen name="diario" component={Diario} />
         <Stack.Screen name="agenda" component={Agenda} />
+        <Stack.Screen name="profissionais" component={Profissionais} />
+        <Stack.Screen name="horario" component={Horario} />
+        <Stack.Screen name="solicitacao" component={Solicitacao} />
         <Stack.Screen name="perfil" component={Perfil} />
       </Stack.Navigator>
     </NavigationContainer>

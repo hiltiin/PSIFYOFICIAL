@@ -1,7 +1,10 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { styles as appStyles } from '../Styles/styles';
+import { auth, db } from '../firebase';
+import { ref, get, set } from 'firebase/database';
+import { useIsFocused } from '@react-navigation/native';
 
 const agendaStyles = StyleSheet.create({
   container: {
@@ -11,18 +14,21 @@ const agendaStyles = StyleSheet.create({
     paddingHorizontal: 0,
     paddingBottom: 0,
   },
+  scrollContent: {
+    paddingBottom: 170,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 4,
+    marginBottom: 8,
     paddingHorizontal: 16,
   },
   title: {
     flex: 1,
-    fontSize: 28,
+    fontSize: 24,
     color: '#5EA1BF',
-    fontWeight: 'bold',
+    fontWeight: '700',
     fontFamily: 'Poppins_700Bold',
     marginTop: 0,
     marginBottom: 0,
@@ -41,8 +47,8 @@ const agendaStyles = StyleSheet.create({
   },
   subtitle: {
     color: '#5EA1BF',
-    fontSize: 15,
-    marginBottom: 8,
+    fontSize: 14,
+    marginBottom: 12,
     marginLeft: 16,
     marginRight: 16,
     marginTop: 0,
@@ -52,15 +58,15 @@ const agendaStyles = StyleSheet.create({
   divider: {
     height: 2,
     backgroundColor: '#5EA1BF',
-    marginVertical: 4,
+    marginVertical: 15,
     marginHorizontal: 16,
     borderRadius: 2,
   },
   calendarContainer: {
     backgroundColor: '#7BA6C7',
     borderRadius: 18,
-    paddingVertical: 16,
-    paddingHorizontal: 4,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
     alignItems: 'center',
     marginBottom: 16,
     marginHorizontal: 18,
@@ -80,17 +86,18 @@ const agendaStyles = StyleSheet.create({
   },
   weekdaysRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 2,
+    justifyContent: 'space-between',
+    marginBottom: 6,
+    marginLeft: -2,
     alignSelf: 'center',
-    gap: 6,
+    width: 276,
   },
   weekday: {
     color: '#fff',
-    fontWeight: 'bold',
-    width: 28,
+    fontWeight: '700',
+    width: 32,
     textAlign: 'center',
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: 'Poppins_600SemiBold',
     marginHorizontal: 2,
   },
@@ -98,16 +105,17 @@ const agendaStyles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 230,
+    width: 260,
     alignSelf: 'center',
-    marginTop: 0,
+    marginTop: 6,
+    marginRight: 20,
   },
   dayCircle: {
     width: 32,
     height: 32,
     borderRadius: 16,
     backgroundColor: '#fff',
-    margin: 2,
+    margin: 4,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -117,9 +125,15 @@ const agendaStyles = StyleSheet.create({
   },
   dayText: {
     color: '#5EA1BF',
-    fontWeight: 'bold',
-    fontSize: 15,
+    fontWeight: '700',
+    fontSize: 13,
     fontFamily: 'Poppins_700Bold',
+  },
+  dayCircleSelected: {
+    backgroundColor: '#5EA1BF',
+  },
+  dayTextSelected: {
+    color: '#fff',
   },
   button: {
     backgroundColor: '#7BA6C7',
@@ -172,63 +186,266 @@ const agendaStyles = StyleSheet.create({
     tintColor: '#fff',
     marginHorizontal: 10,
   },
+  emptyText: {
+    color: '#7BA6C7',
+    fontSize: 13,
+    fontFamily: 'Poppins_400Regular',
+    marginLeft: 16,
+    marginTop: 6,
+  },
+  cardTitle: {
+    color: '#3A6B8E',
+    fontSize: 15,
+    fontFamily: 'Poppins_600SemiBold',
+    marginBottom: 2,
+  },
+  cardSub: {
+    color: '#7BA6C7',
+    fontSize: 13,
+    fontFamily: 'Poppins_400Regular',
+    marginBottom: 2,
+  },
 });
 export default function Agenda({ onNavigate }) {
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [displayedYear, setDisplayedYear] = useState(new Date().getFullYear());
+  const [displayedMonth, setDisplayedMonth] = useState(new Date().getMonth()); // 0-11
+  const [appointments, setAppointments] = useState([]);
+  const [appointmentsLoading, setAppointmentsLoading] = useState(false);
+
+  const isFocused = useIsFocused();
+
+  const hasUserInteractedRef = useRef(false);
+
+  const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+  const formatDate = (y, m, d) => {
+    const mm = String(m + 1).padStart(2, '0');
+    const dd = String(d).padStart(2, '0');
+    return `${y}-${mm}-${dd}`;
+  };
+
+  const uniqueStrings = (arr) => Array.from(new Set((arr || []).map((v) => String(v))));
+
+  const loadAppointments = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+      setAppointmentsLoading(true);
+      const snap = await get(ref(db, `users/${user.uid}/appointments`));
+      if (!snap.exists()) {
+        setAppointments([]);
+        return;
+      }
+
+      const data = snap.val() || {};
+      const items = Object.entries(data).map(([id, value]) => ({
+        id,
+        ...(value || {}),
+      }));
+
+      // Sort by date then time (ascending) when possible
+      items.sort((a, b) => {
+        const aKey = `${a.date || '9999-12-31'} ${a.time || '99:99'}`;
+        const bKey = `${b.date || '9999-12-31'} ${b.time || '99:99'}`;
+        return aKey.localeCompare(bKey);
+      });
+
+      setAppointments(items);
+    } catch (err) {
+      console.warn('Erro ao carregar consultas:', err);
+    } finally {
+      setAppointmentsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const loadSelected = async () => {
+      try {
+        const user = auth.currentUser;
+        if (!user) return;
+        const snap = await get(ref(db, `users/${user.uid}/selectedDays`));
+        if (snap.exists()) {
+          const data = snap.val();
+          let values = [];
+          if (Array.isArray(data)) values = data;
+          else if (data) values = Object.values(data);
+
+          // normalize: if values look like numbers (day numbers), convert to ISO for current month
+          const normalized = values.map((v) => {
+            if (typeof v === 'number') {
+              const d = new Date();
+              return formatDate(d.getFullYear(), d.getMonth(), Number(v));
+            }
+            if (/^\d{4}-\d{2}-\d{2}$/.test(String(v))) return String(v);
+            // fallback: try number conversion
+            const n = Number(v);
+            if (!isNaN(n)) {
+              const d = new Date();
+              return formatDate(d.getFullYear(), d.getMonth(), n);
+            }
+            return String(v);
+          });
+          // If user clicked before the async load returns, merge instead of overwriting.
+          setSelectedDays((prev) => {
+            if (hasUserInteractedRef.current) {
+              return uniqueStrings([...(prev || []), ...normalized]);
+            }
+            return uniqueStrings(normalized);
+          });
+        }
+      } catch (err) {
+        console.warn('Erro ao carregar seleções:', err);
+      }
+    };
+    loadSelected();
+  }, []);
+
+  useEffect(() => {
+    if (!isFocused) return;
+    loadAppointments();
+  }, [isFocused]);
+
+  const persistSelected = async (days) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+      const normalized = uniqueStrings(days);
+      await set(ref(db, `users/${user.uid}/selectedDays`), normalized);
+    } catch (err) {
+      console.warn('Erro ao salvar seleções:', err);
+    }
+  };
+
+  const saveClickedDate = async (dateStr) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+      await set(ref(db, `users/${user.uid}/selectedServiceDate`), String(dateStr));
+    } catch (err) {
+      console.warn('Erro ao salvar data clicada:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (!hasUserInteractedRef.current) return;
+    persistSelected(selectedDays);
+  }, [selectedDays]);
+
+  const toggleDay = (dayNumber) => {
+    const dateStr = formatDate(displayedYear, displayedMonth, dayNumber);
+    hasUserInteractedRef.current = true;
+    setSelectedDays((prev) => {
+      const safePrev = Array.isArray(prev) ? prev : [];
+      if (safePrev.includes(dateStr)) return safePrev.filter((d) => d !== dateStr);
+      return [...safePrev, dateStr];
+    });
+  };
+
+  // wrapper requested: onClick handler for day cells
+  const onClickDay = async (dayNumber) => {
+    const dateStr = formatDate(displayedYear, displayedMonth, dayNumber);
+    await saveClickedDate(dateStr);
+    toggleDay(dayNumber);
+    onNavigate && onNavigate('profissionais');
+  };
+
+  const onPressMonth = () => {
+    const today = new Date();
+    const maxIndex = today.getFullYear() * 12 + today.getMonth() + 2;
+    const currentIndex = displayedYear * 12 + displayedMonth;
+    if (currentIndex < maxIndex) {
+      const nextIndex = currentIndex + 1;
+      setDisplayedYear(Math.floor(nextIndex / 12));
+      setDisplayedMonth(nextIndex % 12);
+    } else {
+      // wrap back to current month
+      setDisplayedYear(today.getFullYear());
+      setDisplayedMonth(today.getMonth());
+    }
+  };
   return (
     <View style={agendaStyles.container}>
-      {/* Header */}
-      <View style={agendaStyles.header}>
-        <Text style={agendaStyles.title}><Text style={agendaStyles.titleBold}>Seu calendário{"\n"}particular</Text></Text>
-        <Image source={require('../assets/psifylogo.png')} style={agendaStyles.logo} />
-      </View>
-      <Text style={agendaStyles.subtitle}>
-        Aqui você pode ver suas consultas agendadas, marcar novas, além de remarcar e cancelá-las.
-      </Text>
-      <View style={agendaStyles.divider} />
-      {/* Calendar */}
-      <View style={agendaStyles.calendarContainer}>
-        <Text style={agendaStyles.month}>Janeiro</Text>
-        <View style={agendaStyles.weekdaysRow}>
-          {['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'].map((d) => (
-            <Text key={d} style={agendaStyles.weekday}>{d}</Text>
-          ))}
+      <ScrollView contentContainerStyle={agendaStyles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <View style={agendaStyles.header}>
+          <Text style={agendaStyles.title}><Text style={agendaStyles.titleBold}>Seu calendário{"\n"}particular</Text></Text>
+          <Image source={require('../assets/psifylogo.png')} style={agendaStyles.logo} />
         </View>
-        <View style={agendaStyles.daysGrid}>
-          {(() => {
-            const firstDayOfWeek = 4;
-            const daysInMonth = 31;
-            const weeks = [];
-            let day = 1;
-            for (let w = 0; w < 6; w++) {
-              const daysRow = [];
-              for (let d = 0; d < 7; d++) {
-                if (w === 0 && d < firstDayOfWeek) {
-                  daysRow.push(<View key={`empty-${w}-${d}`} style={{ width: 38, height: 38, margin: 3 }} />);
-                } else if (day > daysInMonth) {
-                  daysRow.push(<View key={`empty-${w}-${d}`} style={{ width: 38, height: 38, margin: 3 }} />);
-                } else {
-                  daysRow.push(
-                    <View key={day} style={agendaStyles.dayCircle}>
-                      <Text style={agendaStyles.dayText}>{day}</Text>
-                    </View>
-                  );
-                  day++;
+        <Text style={agendaStyles.subtitle}>
+          Aqui você pode ver suas consultas agendadas, marcar novas, além de remarcar e cancelá-las.
+        </Text>
+        <View style={agendaStyles.divider} />
+
+        {/* Calendar */}
+        <View style={agendaStyles.calendarContainer}>
+          <TouchableOpacity onPress={onPressMonth}>
+            <Text style={agendaStyles.month}>{monthNames[displayedMonth]} {displayedYear}</Text>
+          </TouchableOpacity>
+          <View style={agendaStyles.weekdaysRow}>
+            {['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'].map((d) => (
+              <Text key={d} style={agendaStyles.weekday}>{d}</Text>
+            ))}
+          </View>
+          <View style={agendaStyles.daysGrid}>
+            {(() => {
+              const firstDayOfWeek = new Date(displayedYear, displayedMonth, 1).getDay();
+              const daysInMonth = new Date(displayedYear, displayedMonth + 1, 0).getDate();
+              const weeks = [];
+              let day = 1;
+              for (let w = 0; w < 6; w++) {
+                const daysRow = [];
+                for (let d = 0; d < 7; d++) {
+                  if (w === 0 && d < firstDayOfWeek) {
+                    daysRow.push(<View key={`empty-${w}-${d}`} style={{ width: 32, height: 32, margin: 4 }} />);
+                  } else if (day > daysInMonth) {
+                    daysRow.push(<View key={`empty-${w}-${d}`} style={{ width: 32, height: 32, margin: 4 }} />);
+                  } else {
+                    const dayValue = day;
+                    const dateStr = formatDate(displayedYear, displayedMonth, dayValue);
+                    const isSelected = selectedDays.includes(dateStr);
+                    daysRow.push(
+                      <TouchableOpacity
+                        key={dayValue}
+                        onPress={() => onClickDay(dayValue)}
+                        style={[agendaStyles.dayCircle, isSelected && agendaStyles.dayCircleSelected]}
+                      >
+                        <Text style={[agendaStyles.dayText, isSelected && agendaStyles.dayTextSelected]}>{dayValue}</Text>
+                      </TouchableOpacity>
+                    );
+                    day++;
+                  }
                 }
+                weeks.push(
+                  <View key={w} style={{ flexDirection: 'row', justifyContent: 'space-between', width: 260 }}>
+                    {daysRow}
+                  </View>
+                );
               }
-              weeks.push(
-                <View key={w} style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                  {daysRow}
-                </View>
-              );
-            }
-            return weeks;
-          })()}
+              return weeks;
+            })()}
+          </View>
         </View>
-      </View>
-      {/* Agendar Button */}
-      <TouchableOpacity style={agendaStyles.button}>
-        <Text style={agendaStyles.buttonText}>Agendar</Text>
-      </TouchableOpacity>
+
+        {/* Appointments */}
+        <Text style={[appStyles.sectionTitle, { marginTop: 6 }]}>Consultas agendadas</Text>
+        {appointmentsLoading ? (
+          <Text style={agendaStyles.emptyText}>Carregando...</Text>
+        ) : appointments.length === 0 ? (
+          <Text style={agendaStyles.emptyText}>Nenhuma consulta agendada.</Text>
+        ) : (
+          appointments.map((a) => (
+            <View key={a.id} style={appStyles.card}>
+              <Image source={require('../assets/perfil do psicologo.png')} style={appStyles.psychologistIcon} />
+              <View style={appStyles.cardTextContainer}>
+                <Text style={agendaStyles.cardTitle}>{a?.professional?.name || 'Profissional'}</Text>
+                <Text style={agendaStyles.cardSub}>{a?.professional?.email || ''}</Text>
+                <Text style={agendaStyles.cardSub}>{`${a?.date || ''} ${a?.time || ''}`.trim()}</Text>
+              </View>
+            </View>
+          ))
+        )}
+      </ScrollView>
       {/* Bottom Tab Bar igual home.js */}
       <View style={appStyles.bottomFill} />
       <View style={appStyles.bottomBar}>

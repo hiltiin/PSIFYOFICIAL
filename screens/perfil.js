@@ -1,7 +1,38 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, Switch, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Image, Switch, StyleSheet, Alert } from 'react-native';
+import { auth, db } from '../firebase';
+import { signOut } from 'firebase/auth';
+import { ref, get } from 'firebase/database';
 
 export default function PerfilScreen({ onNavigate }) {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const user = auth.currentUser;
+        if (!user) return;
+        const snap = await get(ref(db, `users/${user.uid}`));
+        if (snap.exists()) {
+          const data = snap.val();
+          setFirstName(data.firstName || '');
+          setLastName(data.lastName || '');
+        }
+      } catch (err) {
+        console.warn('Erro ao buscar perfil:', err);
+      }
+    };
+    fetchProfile();
+  }, []);
+  const handleSignOut = async () => {
+      try {
+      await signOut(auth);
+      onNavigate && onNavigate({ type: 'reset', to: 'welcome' });
+    } catch (err) {
+      Alert.alert('Erro', err.message || 'Erro ao sair');
+    }
+  };
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -10,6 +41,7 @@ export default function PerfilScreen({ onNavigate }) {
           <Text style={styles.backArrow}>{'<'}</Text>
         </TouchableOpacity>
         <Image source={require('../assets/icone de perfil.png')} style={styles.profileIcon} />
+        <Text style={styles.profileName}>{`${firstName}${firstName && lastName ? ' ' : ''}${lastName}`}</Text>
         <Text style={styles.title}>Minha conta</Text>
       </View>
       {/* Menu */}
@@ -19,7 +51,9 @@ export default function PerfilScreen({ onNavigate }) {
         <TouchableOpacity style={styles.menuItem}><Text style={styles.menuText}>Ajuda e suporte</Text></TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}><Text style={styles.menuText}>Termos e política</Text></TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}><Text style={styles.menuText}>Excluir conta</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}><Text style={styles.menuText}>Sair</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={handleSignOut}>
+          <Text style={styles.menuText}>Sair</Text>
+        </TouchableOpacity>
       </View>
       {/* Alto Contraste Switch (não funcional) */}
       <View style={styles.contrastContainer}>
@@ -59,6 +93,12 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginBottom: 10,
+  },
+  profileName: {
+    fontSize: 16,
+    color: '#fff',
+    marginBottom: 6,
+    fontWeight: '600',
   },
   title: {
     fontSize: 22,

@@ -139,22 +139,17 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: 56,
+    bottom: 53,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#7BA6C7',
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
-    height: 64,
+    height: 66,
     paddingHorizontal: 32,
     marginHorizontal: 0,
-    borderTopWidth: 1,
-    borderColor: '#e0e0e0',
-    elevation: 6,
-    shadowColor: '#000',
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
+
   },
   bottomFill: {
     position: 'absolute',
@@ -400,7 +395,7 @@ export const styles = StyleSheet.create({
   
   // --- HEADER / ONDAS ---
   headerBackground: {
-    height: 200,
+    height: 150,
     width: '100%',
     position: 'absolute',
     top: 0,
@@ -419,16 +414,16 @@ export const styles = StyleSheet.create({
 
   // --- CONTEÚDO CADASTRO ---
   scrollContent: {
-    paddingTop: 180,
-    paddingHorizontal: 30,
-    paddingBottom: 40,
+    paddingTop: 80,
+    paddingHorizontal: 24,
+    paddingBottom: 16,
     alignItems: 'center',
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontFamily: 'Poppins_700Bold',
     color: '#5d9cbf',
-    marginBottom: 40,
+    marginBottom: 16,
   },
 
   // --- INPUTS ---
@@ -442,14 +437,14 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#9e9e9e',
     borderRadius: 8,
-    height: 55,
-    marginBottom: 25,
+    height: 48,
+    marginBottom: 14,
     paddingHorizontal: 15,
     position: 'relative',
   },
   labelContainer: {
     position: 'absolute',
-    top: -10,
+    top: -8,
     left: 10,
     backgroundColor: '#fff', 
     paddingHorizontal: 5,
@@ -489,6 +484,13 @@ export const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     marginBottom: 15,
+  },
+
+  fullPrimaryButton: {
+    width: '100%',
+    borderRadius: 12,
+    height: 52,
+    marginBottom: 18,
   },
   primaryButtonText: {
     color: '#fff',

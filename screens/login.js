@@ -1,10 +1,28 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StatusBar, Alert } from 'react-native';
 import { styles } from '../Styles/styles';
 import CustomInput from '../components/Input';
 import { Ionicons } from '@expo/vector-icons';
+import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function LoginScreen({ onNavigate }) {
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+
+	const handleLogin = async () => {
+		if (!email || !password) {
+			Alert.alert('Erro', 'Preencha email e senha');
+			return;
+		}
+		try {
+			await signInWithEmailAndPassword(auth, email, password);
+			onNavigate('home');
+		} catch (error) {
+			Alert.alert('Erro', error.message);
+		}
+	};
+
 	return (
 		<View style={styles.loginContainer}>
 			{/* Back arrow to previous screen */}
@@ -21,27 +39,23 @@ export default function LoginScreen({ onNavigate }) {
 					<Text style={styles.loginTitle}>Login</Text>
 
 					<View style={styles.formArea}>
-						<CustomInput label="Email" placeholder="" />
-						<CustomInput label="Senha" secureTextEntry onClear={() => {}} />
+						<CustomInput label="Email" placeholder="" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
+						<CustomInput label="Senha" secureTextEntry showIcon value={password} onChangeText={setPassword} />
 					</View>
 
 					<View style={{ alignItems: 'center', marginTop: 10 }}>
-						<TouchableOpacity style={styles.primaryButton} onPress={() => onNavigate('home')}>
+						<TouchableOpacity style={styles.primaryButton} onPress={handleLogin}>
 							<Text style={styles.primaryButtonText}>Login</Text>
 						</TouchableOpacity>
 
 						<View style={styles.linkContainer}>
 							<Text style={styles.orText}>ou</Text>
 							<TouchableOpacity onPress={() => onNavigate('cadastro')}>
-								<Text style={[styles.linkText, {fontWeight: 'bold'}]}>
-									Cadastre-se
-								</Text>
+								<Text style={[styles.linkText, { fontWeight: 'bold' }]}>Cadastre-se</Text>
 							</TouchableOpacity>
 						</View>
 					</View>
 				</View>
-
-        
 			</ScrollView>
 		</View>
 	);

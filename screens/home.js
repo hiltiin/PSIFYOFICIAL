@@ -1,8 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { styles } from '../Styles/styles';
+import { auth, db } from '../firebase';
+import { ref, get } from 'firebase/database';
 
 export default function HomeScreen({ onNavigate }) {
+  const [firstName, setFirstName] = useState('');
+
+  useEffect(() => {
+    const fetchName = async () => {
+      try {
+        const user = auth.currentUser;
+        if (!user) return;
+        const snap = await get(ref(db, `users/${user.uid}`));
+        if (snap.exists()) {
+          const data = snap.val();
+          setFirstName(data.firstName || '');
+        }
+      } catch (err) {
+        console.warn('Erro ao buscar nome:', err);
+      }
+    };
+    fetchName();
+  }, []);
   return (
     <View style={styles.container}>
       {/* Barra de busca */}
@@ -26,7 +46,7 @@ export default function HomeScreen({ onNavigate }) {
       </TouchableOpacity>
 
       {/* Saudação */}
-      <Text style={styles.helloText}>Olá, Usuário!</Text>
+      <Text style={styles.helloText}>Olá, {firstName ? firstName : 'Usuário'}!</Text>
       <Text style={styles.subtitle}>Sua jornada de autocuidado começa aqui.</Text>
       <View style={styles.divider} />
 
