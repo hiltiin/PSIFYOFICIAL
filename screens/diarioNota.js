@@ -81,8 +81,6 @@ export default function DiarioNota({ onNavigate, route }) {
   }
 
   function handleBack() {
-    // Se o usuário não escreveu nada, apenas volta sem criar nota.
-    // Se escreveu, salva automaticamente para não perder.
     if (!text.trim()) {
       onNavigate && onNavigate('back');
       return;

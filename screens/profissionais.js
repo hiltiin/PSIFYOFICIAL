@@ -30,7 +30,6 @@ export default function ProfissionaisScreen({ onNavigate }) {
 
   return (
     <View style={styles.container}>
-      {/* Search bar */}
       <View style={styles.searchBarContainer}>
         <View style={styles.searchBar}>
           <TextInput
@@ -42,12 +41,10 @@ export default function ProfissionaisScreen({ onNavigate }) {
         </View>
       </View>
 
-      {/* Back arrow */}
       <TouchableOpacity style={{ marginLeft: 16, marginTop: 4, marginBottom: 8 }} onPress={() => onNavigate && onNavigate('back')}>
         <Ionicons name="chevron-back" size={28} color="#5d9cbf" />
       </TouchableOpacity>
 
-      {/* Title */}
       <Text style={[styles.helloText, { fontSize: 28, marginTop: 0 }]}>
         Selecione o{"\n"}
         profissional para{"\n"}
@@ -56,7 +53,6 @@ export default function ProfissionaisScreen({ onNavigate }) {
 
       <Text style={styles.sectionTitle}>Psicólogos próximos a sua região</Text>
 
-      {/* List */}
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         {professionals.map((p) => (
           <TouchableOpacity
@@ -84,7 +80,6 @@ export default function ProfissionaisScreen({ onNavigate }) {
         ))}
       </ScrollView>
 
-      {/* Bottom nav */}
       <View style={styles.bottomFill} />
       <View style={styles.bottomBar}>
         <TouchableOpacity onPress={() => onNavigate && onNavigate('home')}>

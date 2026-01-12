@@ -25,7 +25,6 @@ export default function HomeScreen({ onNavigate }) {
   }, []);
   return (
     <View style={styles.container}>
-      {/* Barra de busca */}
       <View style={styles.searchBarContainer}>
         <View style={styles.searchBar}>
           <TextInput
@@ -40,17 +39,14 @@ export default function HomeScreen({ onNavigate }) {
         </TouchableOpacity>
       </View>
 
-      {/* Inserir CEP */}
       <TouchableOpacity>
         <Text style={styles.cepText}>Inserir CEP</Text>
       </TouchableOpacity>
 
-      {/* Saudação */}
       <Text style={styles.helloText}>Olá, {firstName ? firstName : 'Usuário'}!</Text>
       <Text style={styles.subtitle}>Sua jornada de autocuidado começa aqui.</Text>
       <View style={styles.divider} />
 
-      {/* Psicólogos próximos */}
       <Text style={styles.sectionTitle}>Psicólogos próximos a sua região</Text>
       <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
         {[1,2,3,4,5,6,7,8,9,10].map((item) => (
@@ -72,7 +68,6 @@ export default function HomeScreen({ onNavigate }) {
         ))}
       </ScrollView>
 
-      {/* Barra de navegação inferior */}
       <View style={styles.bottomFill} />
       <View style={styles.bottomBar}>
         <TouchableOpacity>

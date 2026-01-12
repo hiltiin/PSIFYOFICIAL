@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StatusBar, ImageBackground, Alert } from 'react-native';
-import { styles } from '../Styles/styles'; // Importa estilos
-import CustomInput from '../components/Input'; // Importa input
+import { styles } from '../Styles/styles';
+import CustomInput from '../components/Input';
 import { Ionicons } from '@expo/vector-icons';
 const bgImage = require('../assets/imagem de fundo.png');
 import { auth, db } from '../firebase';
@@ -43,7 +43,6 @@ export default function CadastroScreen({ onNavigate }) {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
-      {/* Back arrow to login */}
       <TouchableOpacity
         style={styles.backTopLeft}
         onPress={() => onNavigate({ type: 'reset', to: 'welcome' })}
@@ -51,9 +50,7 @@ export default function CadastroScreen({ onNavigate }) {
         <Ionicons name="chevron-back" size={30} color="#5d9cbf" />
       </TouchableOpacity>
       
-      {/* Fundo Onda (imagem) */}
       <ImageBackground source={bgImage} style={styles.headerBackground} resizeMode="cover">
-        {/* imagem usada como fundo com efeito de onda */}
       </ImageBackground>
 
       <View style={styles.scrollContent}>

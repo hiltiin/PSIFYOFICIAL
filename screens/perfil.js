@@ -35,7 +35,6 @@ export default function PerfilScreen({ onNavigate }) {
   };
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => onNavigate && onNavigate('back')} style={styles.backButton}>
           <Text style={styles.backArrow}>{'<'}</Text>
@@ -44,7 +43,6 @@ export default function PerfilScreen({ onNavigate }) {
         <Text style={styles.profileName}>{`${firstName}${firstName && lastName ? ' ' : ''}${lastName}`}</Text>
         <Text style={styles.title}>Minha conta</Text>
       </View>
-      {/* Menu */}
       <View style={styles.menu}>
         <TouchableOpacity style={styles.menuItem}><Text style={styles.menuText}>Editar perfil</Text></TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}><Text style={styles.menuText}>Segurança</Text></TouchableOpacity>
@@ -55,7 +53,6 @@ export default function PerfilScreen({ onNavigate }) {
           <Text style={styles.menuText}>Sair</Text>
         </TouchableOpacity>
       </View>
-      {/* Alto Contraste Switch (não funcional) */}
       <View style={styles.contrastContainer}>
         <Text style={styles.contrastLabel}>Alto Contraste</Text>
         <Switch value={false} disabled={true} />

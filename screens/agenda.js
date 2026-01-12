@@ -209,7 +209,7 @@ const agendaStyles = StyleSheet.create({
 export default function Agenda({ onNavigate }) {
   const [selectedDays, setSelectedDays] = useState([]);
   const [displayedYear, setDisplayedYear] = useState(new Date().getFullYear());
-  const [displayedMonth, setDisplayedMonth] = useState(new Date().getMonth()); // 0-11
+  const [displayedMonth, setDisplayedMonth] = useState(new Date().getMonth());
   const [appointments, setAppointments] = useState([]);
   const [appointmentsLoading, setAppointmentsLoading] = useState(false);
 
@@ -244,7 +244,6 @@ export default function Agenda({ onNavigate }) {
         ...(value || {}),
       }));
 
-      // Sort by date then time (ascending) when possible
       items.sort((a, b) => {
         const aKey = `${a.date || '9999-12-31'} ${a.time || '99:99'}`;
         const bKey = `${b.date || '9999-12-31'} ${b.time || '99:99'}`;
@@ -271,14 +270,12 @@ export default function Agenda({ onNavigate }) {
           if (Array.isArray(data)) values = data;
           else if (data) values = Object.values(data);
 
-          // normalize: if values look like numbers (day numbers), convert to ISO for current month
           const normalized = values.map((v) => {
             if (typeof v === 'number') {
               const d = new Date();
               return formatDate(d.getFullYear(), d.getMonth(), Number(v));
             }
             if (/^\d{4}-\d{2}-\d{2}$/.test(String(v))) return String(v);
-            // fallback: try number conversion
             const n = Number(v);
             if (!isNaN(n)) {
               const d = new Date();
@@ -286,7 +283,6 @@ export default function Agenda({ onNavigate }) {
             }
             return String(v);
           });
-          // If user clicked before the async load returns, merge instead of overwriting.
           setSelectedDays((prev) => {
             if (hasUserInteractedRef.current) {
               return uniqueStrings([...(prev || []), ...normalized]);
@@ -342,7 +338,6 @@ export default function Agenda({ onNavigate }) {
     });
   };
 
-  // wrapper requested: onClick handler for day cells
   const onClickDay = async (dayNumber) => {
     const dateStr = formatDate(displayedYear, displayedMonth, dayNumber);
     await saveClickedDate(dateStr);
@@ -359,7 +354,6 @@ export default function Agenda({ onNavigate }) {
       setDisplayedYear(Math.floor(nextIndex / 12));
       setDisplayedMonth(nextIndex % 12);
     } else {
-      // wrap back to current month
       setDisplayedYear(today.getFullYear());
       setDisplayedMonth(today.getMonth());
     }
@@ -367,7 +361,6 @@ export default function Agenda({ onNavigate }) {
   return (
     <View style={agendaStyles.container}>
       <ScrollView contentContainerStyle={agendaStyles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Header */}
         <View style={agendaStyles.header}>
           <Text style={agendaStyles.title}><Text style={agendaStyles.titleBold}>Seu calendário{"\n"}particular</Text></Text>
           <Image source={require('../assets/psifylogo.png')} style={agendaStyles.logo} />
@@ -377,7 +370,6 @@ export default function Agenda({ onNavigate }) {
         </Text>
         <View style={agendaStyles.divider} />
 
-        {/* Calendar */}
         <View style={agendaStyles.calendarContainer}>
           <TouchableOpacity onPress={onPressMonth}>
             <Text style={agendaStyles.month}>{monthNames[displayedMonth]} {displayedYear}</Text>
@@ -427,7 +419,6 @@ export default function Agenda({ onNavigate }) {
           </View>
         </View>
 
-        {/* Appointments */}
         <Text style={[appStyles.sectionTitle, { marginTop: 6 }]}>Consultas agendadas</Text>
         {appointmentsLoading ? (
           <Text style={agendaStyles.emptyText}>Carregando...</Text>
@@ -446,7 +437,6 @@ export default function Agenda({ onNavigate }) {
           ))
         )}
       </ScrollView>
-      {/* Bottom Tab Bar igual home.js */}
       <View style={appStyles.bottomFill} />
       <View style={appStyles.bottomBar}>
         <TouchableOpacity onPress={() => onNavigate && onNavigate('home')}>

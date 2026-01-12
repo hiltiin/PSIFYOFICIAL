@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 
-// Substitua os valores abaixo pelos do seu projeto Firebase
 const firebaseConfig = {
   apiKey: 'AIzaSyBiXcSZOnfQ5rn4DZBDi1oC2zQD9SK2wh0',
   authDomain: 'psify-1ee75.firebaseapp.com',

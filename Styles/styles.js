@@ -3,7 +3,6 @@ import { StyleSheet, Dimensions, Platform, StatusBar } from 'react-native';
 const { width } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
-  // --- GERAL ---
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -172,7 +171,6 @@ export const styles = StyleSheet.create({
     paddingBottom: 2,
   },
 
-  // --- WELCOME ---
   welcomeContainer: {
     flex: 1,
     backgroundColor: '#fff',
@@ -244,7 +242,6 @@ export const styles = StyleSheet.create({
     backgroundColor: '#5d9cbf',
   },
 
-  // --- ONBOARDING 2 ---
   onboardingContainer: {
     flex: 1,
     backgroundColor: '#fff',
@@ -304,7 +301,6 @@ export const styles = StyleSheet.create({
     fontFamily: 'Poppins_700Bold',
   },
 
-  // --- ONBOARDING 3 ---
   onboarding3Container: {
     flex: 1,
     backgroundColor: '#98c5de',
@@ -392,8 +388,7 @@ export const styles = StyleSheet.create({
   onboarding3Indicator: {
     width: 46,
   },
-  
-  // --- HEADER / ONDAS ---
+
   headerBackground: {
     height: 150,
     width: '100%',
@@ -412,7 +407,6 @@ export const styles = StyleSheet.create({
     transform: [{ scaleX: 1.2 }],
   },
 
-  // --- CONTEÚDO CADASTRO ---
   scrollContent: {
     paddingTop: 80,
     paddingHorizontal: 24,
@@ -426,7 +420,6 @@ export const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  // --- INPUTS ---
   formArea: {
     width: '100%',
     marginBottom: 10,
@@ -470,7 +463,6 @@ export const styles = StyleSheet.create({
     color: '#757575',
   },
 
-  // --- BOTÕES E LINKS ---
   primaryButton: {
     backgroundColor: '#5d9cbf',
     width: 150,
@@ -534,7 +526,6 @@ export const styles = StyleSheet.create({
     fontFamily: 'Poppins_600SemiBold',
   },
 
-  // --- ESTILOS ESPECÍFICOS DE LOGIN ---
   loginContainer: {
     flex: 1,
     backgroundColor: '#98c5de',

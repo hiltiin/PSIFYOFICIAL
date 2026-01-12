@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { styles } from '../Styles/styles'; // Importando o CSS
+import { styles } from '../Styles/styles';
 
 export default function CustomInput({
   label,

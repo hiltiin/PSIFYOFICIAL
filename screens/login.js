@@ -25,7 +25,6 @@ export default function LoginScreen({ onNavigate }) {
 
 	return (
 		<View style={styles.loginContainer}>
-			{/* Back arrow to previous screen */}
 			<TouchableOpacity style={styles.backTopLeft} onPress={() => onNavigate({ type: 'reset', to: 'welcome' })}>
 				<Ionicons name="chevron-back" size={30} color="#5d9cbf" />
 			</TouchableOpacity>
